@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" modified="2024-12-09T12:59:59.905Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="e-xqrjxXgyO5KItPY3_a" version="24.3.1" type="device">
+  <diagram name="第 1 页" id="sWP7ImtuteXzCKTP-jMm">
+    <mxGraphModel dx="1080" dy="475" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-2" value="HR-System" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="360" y="340" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-3" value="Mysql" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="562" y="279" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-4" value="Redis" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="562" y="399" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-5" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.048;entryY=0.506;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="n5xAaM7DE42dhYjtoBgp-2" target="n5xAaM7DE42dhYjtoBgp-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="400" as="sourcePoint" />
+            <mxPoint x="490" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-10" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="340" y="260" width="300" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-7" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.033;entryY=0.561;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="n5xAaM7DE42dhYjtoBgp-2" target="n5xAaM7DE42dhYjtoBgp-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="400" as="sourcePoint" />
+            <mxPoint x="490" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-8" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="n5xAaM7DE42dhYjtoBgp-12" target="n5xAaM7DE42dhYjtoBgp-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="360" as="sourcePoint" />
+            <mxPoint x="490" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-11" value="Backend" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="455" y="230" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="n5xAaM7DE42dhYjtoBgp-12" value="Client" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="210" y="350" width="30" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
