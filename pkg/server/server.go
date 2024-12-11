@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
 
@@ -16,13 +15,11 @@ type Config struct {
 	Port string `mapstructure:"port"`
 }
 
-func NewServer(cfg Config) *Server {
-	g := gin.New()
-	g.Use(gin.Recovery())
+func NewServer(cfg Config, handler http.Handler) *Server {
 	return &Server{
 		app: &http.Server{
 			Addr:    cfg.Port,
-			Handler: g,
+			Handler: handler,
 		},
 	}
 }
