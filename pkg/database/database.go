@@ -4,11 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/rs/zerolog/log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type Database struct {
@@ -37,7 +39,19 @@ func (c Config) GetDSN() string {
 }
 
 func NewDatabase(config Config) *Database {
-	db, err := gorm.Open(mysql.Open(config.GetDSN()), &gorm.Config{})
+	newLogger := logger.New(
+		&log.Logger,
+		logger.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logger.Info, // Log level
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      false,       // Don't include params in the SQL log
+			Colorful:                  true,        // Disable color
+
+		},
+	)
+
+	db, err := gorm.Open(mysql.Open(config.GetDSN()), &gorm.Config{Logger: newLogger})
 
 	if err != nil {
 		log.Panic().Err(err).Msgf("Connect to Database failed")
