@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"HRSystem/internal/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,11 +9,18 @@ import (
 
 type Handler struct {
 	*gin.Engine
+	accountSvc       *service.AccountService
+	clockInRecordSvc *service.ClockInRecordService
 }
 
-func New() http.Handler {
+func New(
+	accountSvc *service.AccountService,
+	clockInRecordSvc *service.ClockInRecordService,
+) http.Handler {
 	h := &Handler{
-		Engine: gin.New(),
+		Engine:           gin.New(),
+		accountSvc:       accountSvc,
+		clockInRecordSvc: clockInRecordSvc,
 	}
 	h.Use(gin.Recovery())
 

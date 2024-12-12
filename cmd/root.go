@@ -3,6 +3,7 @@ package cmd
 import (
 	"HRSystem/internal/config"
 	"HRSystem/internal/handler"
+	"HRSystem/internal/service"
 	"HRSystem/pkg/database"
 	"HRSystem/pkg/logger"
 	"HRSystem/pkg/server"
@@ -49,8 +50,10 @@ func RunServer(cmd *cobra.Command, args []string) {
 	logger.SetLogger(local)
 	config := config.GetConfig(configFile)
 
-	database.NewDatabase(config.Database)
-	handler := handler.New()
+	db := database.NewDatabase(config.Database)
+	accountSvc := service.NewAccountService(db)
+	clockInRecordSvc := service.NewClockInRecordService(db)
+	handler := handler.New(accountSvc, clockInRecordSvc)
 	svr := server.NewServer(config.Http, handler)
 
 	svr.Run()

@@ -64,3 +64,7 @@ func (db *Database) Shutdown(ctx context.Context) {
 		log.Panic().Err(err).Msgf("failed to calse DB")
 	}
 }
+
+func (db *Database) GetGorm() *gorm.DB {
+	return db.gormDb
+}
