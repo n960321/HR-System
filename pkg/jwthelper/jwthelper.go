@@ -2,8 +2,10 @@ package jwthelper
 
 import (
 	"HRSystem/internal/model"
+	"fmt"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -46,4 +48,18 @@ func ParseToken(tokenString string) (*Claim, error) {
 		}
 	}
 	return nil, err
+}
+
+func GetClaim(ctx *gin.Context) (*Claim, error) {
+	token := ctx.Request.Header.Get("token")
+	if token == "" {
+		return nil, fmt.Errorf("no jwt token")
+	}
+
+	claim, err := ParseToken(token)
+	if err != nil {
+		return nil, fmt.Errorf("bad jwt: %s", err)
+	}
+
+	return claim, nil
 }

@@ -15,5 +15,7 @@ var (
 	ErrInvalidToken = errors.New("invalid token")
 	// token 已過期
 	ErrTokenExpired = errors.New("token has expired")
+	// 權限不足
+	ErrInsufficientPrivilege = errors.New("insufficient privilege")
 	
 )

@@ -4,6 +4,7 @@ import (
 	"HRSystem/internal/model"
 	"HRSystem/internal/service"
 	"HRSystem/pkg/errors"
+	"HRSystem/pkg/jwthelper"
 	"HRSystem/pkg/middleware"
 	"net/http"
 	"time"
@@ -68,6 +69,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 }
 
 func (h *Handler) ChangePassword(ctx *gin.Context) {
+	claim, _ := jwthelper.GetClaim(ctx)
 	var requestBody struct {
 		OldPassword      string `json:"oldPassword"`
 		NewPassword      string `json:"newPassword"`
@@ -77,7 +79,7 @@ func (h *Handler) ChangePassword(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
 		return
 	}
-	err := h.accountSvc.ChangePassword(ctx.Request.Context(), "test4", requestBody.OldPassword, requestBody.NewPassword, requestBody.CheckNewPassword)
+	err := h.accountSvc.ChangePassword(ctx.Request.Context(), claim.Account, requestBody.OldPassword, requestBody.NewPassword, requestBody.CheckNewPassword)
 	if err != nil {
 		status := http.StatusInternalServerError
 		if err == errors.ErrAccountOrPasswordIncorrect {
@@ -93,12 +95,18 @@ func (h *Handler) ChangePassword(ctx *gin.Context) {
 }
 
 func (h *Handler) CreateAccount(ctx *gin.Context) {
+	claim, _ := jwthelper.GetClaim(ctx)
 	var requestBody struct {
 		Account string `json:"account"`
 		Name    string `json:"name"`
 	}
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
+		return
+	}
+	// Optzime: 應該放在service layer檢查
+	if claim.AccountType != model.AccountTypeAdmin {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": errors.ErrInsufficientPrivilege.Error()})
 		return
 	}
 
@@ -121,8 +129,7 @@ func (h *Handler) CreateAccount(ctx *gin.Context) {
 }
 
 func (h *Handler) CreateClockInRecord(ctx *gin.Context) {
-	// TODO - 從jwt 取 accountID
-	accountID := uint64(1)
+	claim, _ := jwthelper.GetClaim(ctx)
 	var requestBody struct {
 		Type model.ClockInType `json:"type"`
 	}
@@ -131,7 +138,7 @@ func (h *Handler) CreateClockInRecord(ctx *gin.Context) {
 		return
 	}
 
-	err := h.clockInRecordSvc.CreateClockInRecord(ctx.Request.Context(), accountID, requestBody.Type)
+	err := h.clockInRecordSvc.CreateClockInRecord(ctx.Request.Context(), claim.ID, requestBody.Type)
 	if err != nil {
 		status := http.StatusInternalServerError
 		if err == errors.ErrAlreadyClockInToday || err == errors.ErrPleaseClockInFirst {
@@ -147,8 +154,7 @@ func (h *Handler) CreateClockInRecord(ctx *gin.Context) {
 }
 
 func (h *Handler) ListClockInRecord(ctx *gin.Context) {
-	// TODO - 從jwt 取 accountID
-	accountID := uint64(1)
+	claim, _ := jwthelper.GetClaim(ctx)
 	start := ctx.Query("start")
 	end := ctx.Query("end")
 	startTime, err := time.Parse(time.DateTime, start)
@@ -167,7 +173,7 @@ func (h *Handler) ListClockInRecord(ctx *gin.Context) {
 		return
 	}
 
-	records, err := h.clockInRecordSvc.ListClockInRecord(ctx.Request.Context(), accountID, startTime, endTime)
+	records, err := h.clockInRecordSvc.ListClockInRecord(ctx.Request.Context(), claim.ID, startTime, endTime)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
