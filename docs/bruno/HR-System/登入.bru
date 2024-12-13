@@ -1,0 +1,28 @@
+meta {
+  name: 登入
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{domain}}/api/v1/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "account":"test4",
+    "password": "test4"
+  }
+}
+
+tests {
+  const resp = res.getBody()
+  if (resp.token) {
+      bru.setEnvVar("token", resp.token);
+      console.log("Token has been set: " + resp.token);
+  } else {
+      console.log("Token not found or request failed.");
+  }
+}

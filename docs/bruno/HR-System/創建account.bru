@@ -1,0 +1,22 @@
+meta {
+  name: 創建account
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{domain}}/api/v1/login
+  body: json
+  auth: none
+}
+
+headers {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "account": "",
+    "name": ""
+  }
+}

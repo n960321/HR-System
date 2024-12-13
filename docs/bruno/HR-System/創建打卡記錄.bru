@@ -1,0 +1,15 @@
+meta {
+  name: 創建打卡記錄
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{domain}}/api/v1/clockInRecord
+  body: none
+  auth: none
+}
+
+headers {
+  token: {{token}}
+}
