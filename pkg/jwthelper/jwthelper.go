@@ -17,7 +17,7 @@ type Claim struct {
 }
 
 func GenerateJWTToken(id uint64, account string, accountType model.AccountType) (string, error) {
-	expiresAt := time.Now().Add(10 * time.Second).Unix()
+	expiresAt := time.Now().Add(1 * time.Hour).Unix()
 	claims := Claim{
 		ID:          id,
 		Account:     account,

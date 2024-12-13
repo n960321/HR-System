@@ -4,6 +4,7 @@ import (
 	"HRSystem/internal/model"
 	"HRSystem/internal/service"
 	"HRSystem/pkg/errors"
+	"HRSystem/pkg/middleware"
 	"net/http"
 	"time"
 
@@ -31,10 +32,11 @@ func New(
 	v1 := api.Group("/v1")
 
 	v1.POST("/login", h.Login)
-	v1.POST("/changePassword", h.ChangePassword)
-	v1.POST("/account", h.CreateAccount)
-	v1.POST("/clockInRecord", h.CreateClockInRecord)
-	v1.GET("/clockInRecord", h.ListClockInRecord)
+	v1Auth := v1.Group("", middleware.ValidateJWT())
+	v1Auth.POST("/changePassword", h.ChangePassword)
+	v1Auth.POST("/account", h.CreateAccount)
+	v1Auth.POST("/clockInRecord", h.CreateClockInRecord)
+	v1Auth.GET("/clockInRecord", h.ListClockInRecord)
 
 	return h
 }

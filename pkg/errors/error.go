@@ -13,4 +13,7 @@ var (
 	ErrAccountOrPasswordIncorrect = errors.New("account or password is incorrect")
 	// 不合法的 token
 	ErrInvalidToken = errors.New("invalid token")
+	// token 已過期
+	ErrTokenExpired = errors.New("token has expired")
+	
 )
