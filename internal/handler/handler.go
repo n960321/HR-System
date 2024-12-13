@@ -40,15 +40,82 @@ func New(
 }
 
 func (h *Handler) Login(ctx *gin.Context) {
-	panic("not implement")
+	var requestBody struct {
+		Account  string `json:"account"`
+		Password string `json:"password"`
+	}
+	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
+		return
+	}
+	token, err := h.accountSvc.Login(ctx.Request.Context(), requestBody.Account, requestBody.Password)
+	if err != nil {
+		status := http.StatusInternalServerError
+		if err == errors.ErrAccountOrPasswordIncorrect {
+			status = http.StatusBadRequest
+		}
+		ctx.JSON(status, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
 }
 
 func (h *Handler) ChangePassword(ctx *gin.Context) {
-	panic("not implement")
+	var requestBody struct {
+		OldPassword      string `json:"oldPassword"`
+		NewPassword      string `json:"newPassword"`
+		CheckNewPassword string `json:"checkNewPassword"`
+	}
+	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
+		return
+	}
+	err := h.accountSvc.ChangePassword(ctx.Request.Context(), "test4", requestBody.OldPassword, requestBody.NewPassword, requestBody.CheckNewPassword)
+	if err != nil {
+		status := http.StatusInternalServerError
+		if err == errors.ErrAccountOrPasswordIncorrect {
+			status = http.StatusBadRequest
+		}
+		ctx.JSON(status, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *Handler) CreateAccount(ctx *gin.Context) {
-	panic("not implement")
+	var requestBody struct {
+		Account string `json:"account"`
+		Name    string `json:"name"`
+	}
+	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
+		return
+	}
+
+	pwd, err := h.accountSvc.CreateAccount(ctx.Request.Context(), requestBody.Name, requestBody.Account)
+	if err != nil {
+		status := http.StatusInternalServerError
+		if err == errors.ErrAccountDuplicate {
+			status = http.StatusBadRequest
+		}
+		ctx.JSON(status, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, gin.H{
+		"password": pwd,
+	})
+
 }
 
 func (h *Handler) CreateClockInRecord(ctx *gin.Context) {
