@@ -1,6 +1,12 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"github.com/rs/zerolog/log"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+)
 
 type Account struct {
 	ID        uint64      `gorm:"column:id;primaryKey;autoIncrement;type:bigint unsigned;not null;comment:id"`
@@ -23,3 +29,18 @@ const (
 	AccountTypeAdmin
 	AccountTypeEmployee
 )
+
+func SeedAdmin(db *gorm.DB) {
+	if err := db.Where("account = ?", "admin").First(&Account{}).Error; err == gorm.ErrRecordNotFound {
+		hashPwd, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
+		adminAccount := Account{
+			Account:  "admin",
+			Type:     AccountTypeAdmin,
+			Name:     "Administrator",
+			Password: string(hashPwd),
+		}
+		if err := db.Create(&adminAccount).Error; err != nil {
+			log.Fatal().Err(err).Msg("create admin failed")
+		}
+	}
+}

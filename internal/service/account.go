@@ -18,6 +18,7 @@ type AccountService struct {
 
 func NewAccountService(db *database.Database) *AccountService {
 	db.GetGorm().AutoMigrate(&model.Account{})
+	model.SeedAdmin(db.GetGorm())
 	return &AccountService{
 		db: db,
 	}
