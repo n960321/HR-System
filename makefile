@@ -11,7 +11,7 @@ run:
 	@go run main.go -l true -c configs/config.yaml
 
 build:
-	@go build -v -o bin/HR-System ./main.go
+	@go build -v -o bin/hr-system ./main.go
 
 docker-build:
 	@docker build --tag n960321/hr-system:latest --file build/dockerfile .
