@@ -3,7 +3,7 @@ cur := $(shell pwd)
 
 db-container-id := $(shell docker ps -a| grep mysql-hr-system | awk '{print $$1}')
 hr-system-container-id := $(shell docker ps -a | grep hr-system-server | awk '{print $$1}')
-redis-container-id := $(shell docker ps -a| grep redis | awk '{print $$1}')
+redis-container-id := $(shell docker ps -a| grep redis-hr-system | awk '{print $$1}')
 
 test: 
 	@go clean -testcache & go test -timeout 30s -v ./test/...
@@ -24,7 +24,8 @@ docker-run:
 	@docker run --name hr-system-server \
 	-p 8080:8080 \
 	--link mysql-hr-system:mysql \
-	--volume $(cur)/configs:/app/configs \
+	--link redis-hr-system:redis \
+	--volume $(cur)/deploy/hr-system/configs:/app/configs \
 	n960321/hr-system:latest
 
 db-remove:
@@ -37,6 +38,6 @@ redis-remove:
 	docker rm -f $(redis-container-id)
 
 redis-run:
-	docker run -d -p 6379:6379 --name redis redis:7.4
+	docker run -d -p 6379:6379 --name redis-hr-system redis:7.4
 
 	
