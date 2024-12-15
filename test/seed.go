@@ -21,6 +21,18 @@ func SeedAccount(db *gorm.DB) {
 			Account:  "test2",
 			Type:     model.AccountTypeEmployee,
 		},
+		{
+			Name:     "test3",
+			Password: GetPwd("test3"),
+			Account:  "test3",
+			Type:     model.AccountTypeEmployee,
+		},
+		{
+			Name:     "test3",
+			Password: GetPwd("test3"),
+			Account:  "test3",
+			Type:     model.AccountTypeEmployee,
+		},
 	}
 
 	for _, a := range accounts {

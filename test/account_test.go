@@ -19,7 +19,7 @@ func TestAccountService_Login(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "管理員登入",
+			name: "Admin Login",
 			args: args{
 				ctx:      context.Background(),
 				account:  "admin",
@@ -28,7 +28,7 @@ func TestAccountService_Login(t *testing.T) {
 			err: nil,
 		},
 		{
-			name: "一般帳號登入",
+			name: "General Account Login",
 			args: args{
 				ctx:      context.Background(),
 				account:  "test1",
@@ -37,7 +37,7 @@ func TestAccountService_Login(t *testing.T) {
 			err: nil,
 		},
 		{
-			name: "使用不存在的帳號登入",
+			name: "Login with Nonexistent Account",
 			args: args{
 				ctx:      context.Background(),
 				account:  "nonexisttest",
@@ -46,7 +46,7 @@ func TestAccountService_Login(t *testing.T) {
 			err: errors.ErrAccountOrPasswordIncorrect,
 		},
 		{
-			name: "使用錯誤的密碼登入",
+			name: "Login with Incorrect Password",
 			args: args{
 				ctx:      context.Background(),
 				account:  "test1",
@@ -80,7 +80,7 @@ func TestAccountService_ChangePassword(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "正確更改密碼",
+			name: "Correctly Change Password",
 			args: args{
 				ctx:              context.Background(),
 				account:          "test1",
@@ -91,7 +91,7 @@ func TestAccountService_ChangePassword(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name: "使用不存在的帳戶更改密碼",
+			name: "Change Password with Nonexistent Account",
 			args: args{
 				ctx:              context.Background(),
 				account:          "notexist",
@@ -102,7 +102,7 @@ func TestAccountService_ChangePassword(t *testing.T) {
 			wantErr: errors.ErrAccountOrPasswordIncorrect,
 		},
 		{
-			name: "舊密碼輸入錯誤",
+			name: "Old Password Input Error",
 			args: args{
 				ctx:              context.Background(),
 				account:          "test1",
@@ -113,7 +113,7 @@ func TestAccountService_ChangePassword(t *testing.T) {
 			wantErr: errors.ErrAccountOrPasswordIncorrect,
 		},
 		{
-			name: "新密碼 與 確認新密碼 不相同",
+			name: "New Password and Confirm New Password Do Not Match",
 			args: args{
 				ctx:              context.Background(),
 				account:          "test2",
@@ -146,17 +146,17 @@ func TestAccountService_CreateAccount(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "成功創建account",
+			name: "Successfully Create Account",
 			args: args{
 				ctx:     context.Background(),
 				creator: &model.Account{Type: model.AccountTypeAdmin},
-				name:    "test3",
-				account: "test3",
+				name:    "create_test3",
+				account: "create_test3",
 			},
 			wantErr: nil,
 		},
 		{
-			name: "creator 權限不足",
+			name: "Creator Privilege Insufficient",
 			args: args{
 				ctx:     context.Background(),
 				creator: &model.Account{Type: model.AccountTypeEmployee},
@@ -166,7 +166,7 @@ func TestAccountService_CreateAccount(t *testing.T) {
 			wantErr: errors.ErrInsufficientPrivilege,
 		},
 		{
-			name: "創建重複account",
+			name: "Create Duplicate Account",
 			args: args{
 				ctx:     context.Background(),
 				creator: &model.Account{Type: model.AccountTypeAdmin},
