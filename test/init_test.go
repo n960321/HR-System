@@ -1,6 +1,7 @@
 package test
 
 import (
+	"HRSystem/internal/service"
 	"HRSystem/pkg/database"
 	"HRSystem/pkg/logger"
 	"context"
@@ -16,8 +17,10 @@ import (
 )
 
 var (
-	db            *database.Database
-	stopContainer func()
+	db               *database.Database
+	accountSvc       *service.AccountService
+	clockInRecordSvc *service.ClockInRecordService
+	stopContainer    func()
 )
 
 func TestMain(m *testing.M) {
@@ -33,6 +36,11 @@ func TestMain(m *testing.M) {
 		MaxIdleConns: 10,
 		MaxOpenConns: 100,
 	})
+	accountSvc = service.NewAccountService(db)
+	clockInRecordSvc = service.NewClockInRecordService(db)
+
+	SeedAccount(db.GetGorm())
+
 	code := m.Run()
 	if stopContainer != nil {
 		stopContainer()
@@ -50,7 +58,7 @@ func runMysqlImage() func() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to get current path")
 	}
-	log.Info().Str("currentPath",currentPath).Msg("currentPath")
+	log.Info().Str("currentPath", currentPath).Msg("currentPath")
 	ctx := context.Background()
 	containerName := fmt.Sprintf("HR-System-TEST-%v", time.Now().Unix())
 	resp, err := cli.ContainerCreate(ctx,
@@ -82,9 +90,12 @@ func runMysqlImage() func() {
 	if err != nil {
 		log.Fatal().Err(err).Str("container name", containerName).Msg("Create start Failed")
 	}
+	// TODO - 要換個方式偵測mysql 健康狀況，是健康的才往下進行
+	time.Sleep(10 * time.Second)
+
 	log.Info().Str("container name", containerName).Msg("Starting Conatiner")
 
-	time.Sleep(10 * time.Second)
+
 	return func() {
 		cli.ContainerStop(ctx, resp.ID, container.StopOptions{})
 		log.Info().Str("container name", containerName).Msg("Stop Conatiner")
