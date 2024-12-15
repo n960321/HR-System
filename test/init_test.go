@@ -32,7 +32,7 @@ func TestMain(m *testing.M) {
 		Port:         "13306",
 		User:         "root",
 		Password:     "123456test",
-		DBName:       "HR-System",
+		DBName:       "hr_system",
 		MaxIdleConns: 10,
 		MaxOpenConns: 100,
 	})
