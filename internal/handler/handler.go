@@ -5,7 +5,6 @@ import (
 	"HRSystem/internal/service"
 	"HRSystem/pkg/errors"
 	"HRSystem/pkg/jwthelper"
-	"HRSystem/pkg/middleware"
 	"net/http"
 	"time"
 
@@ -33,7 +32,7 @@ func New(
 	v1 := api.Group("/v1")
 
 	v1.POST("/login", h.Login)
-	v1Auth := v1.Group("", middleware.ValidateJWT())
+	v1Auth := v1.Group("", jwthelper.JWTHelper.ValidateJWT())
 	v1Auth.POST("/changePassword", h.ChangePassword)
 	v1Auth.POST("/account", h.CreateAccount)
 	v1Auth.POST("/clockInRecord", h.CreateClockInRecord)
@@ -69,7 +68,7 @@ func (h *Handler) Login(ctx *gin.Context) {
 }
 
 func (h *Handler) ChangePassword(ctx *gin.Context) {
-	claim, _ := jwthelper.GetClaim(ctx)
+	claim, _ := jwthelper.JWTHelper.GetClaim(ctx)
 	var requestBody struct {
 		OldPassword      string `json:"oldPassword"`
 		NewPassword      string `json:"newPassword"`
@@ -95,7 +94,7 @@ func (h *Handler) ChangePassword(ctx *gin.Context) {
 }
 
 func (h *Handler) CreateAccount(ctx *gin.Context) {
-	claim, _ := jwthelper.GetClaim(ctx)
+	claim, _ := jwthelper.JWTHelper.GetClaim(ctx)
 	var requestBody struct {
 		Account string `json:"account"`
 		Name    string `json:"name"`
@@ -128,7 +127,7 @@ func (h *Handler) CreateAccount(ctx *gin.Context) {
 }
 
 func (h *Handler) CreateClockInRecord(ctx *gin.Context) {
-	claim, _ := jwthelper.GetClaim(ctx)
+	claim, _ := jwthelper.JWTHelper.GetClaim(ctx)
 	var requestBody struct {
 		Type model.ClockInType `json:"type"`
 	}
@@ -153,7 +152,7 @@ func (h *Handler) CreateClockInRecord(ctx *gin.Context) {
 }
 
 func (h *Handler) ListClockInRecord(ctx *gin.Context) {
-	claim, _ := jwthelper.GetClaim(ctx)
+	claim, _ := jwthelper.JWTHelper.GetClaim(ctx)
 	start := ctx.Query("start")
 	end := ctx.Query("end")
 	startTime, err := time.Parse(time.DateTime, start)

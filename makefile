@@ -3,6 +3,7 @@ cur := $(shell pwd)
 
 db-container-id := $(shell docker ps -a| grep mysql-hr-system | awk '{print $$1}')
 hr-system-container-id := $(shell docker ps -a | grep hr-system-server | awk '{print $$1}')
+redis-container-id := $(shell docker ps -a| grep redis | awk '{print $$1}')
 
 test: 
 	@go clean -testcache & go test -timeout 30s -v ./test/...
@@ -31,5 +32,11 @@ db-remove:
 
 db-run:
 	docker run -d -p 3306:3306 --name mysql-hr-system -e MYSQL_ROOT_PASSWORD=123456 -v $(cur)/deploy/mysql:/docker-entrypoint-initdb.d mysql:8.3.0
+
+redis-remove:
+	docker rm -f $(redis-container-id)
+
+redis-run:
+	docker run -d -p 6379:6379 --name redis redis:7.4
 
 	

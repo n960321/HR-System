@@ -36,7 +36,7 @@ func (s *AccountService) Login(ctx context.Context, account, password string) (s
 		return "", errors.ErrAccountOrPasswordIncorrect
 	}
 
-	token, err := jwthelper.GenerateJWTToken(existingAccount.ID, existingAccount.Account, existingAccount.Type)
+	token, err := jwthelper.JWTHelper.GenerateJWTToken(existingAccount.ID, existingAccount.Account, existingAccount.Type)
 	if err != nil {
 		return "", err
 	}

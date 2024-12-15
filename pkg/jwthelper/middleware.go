@@ -1,15 +1,14 @@
-package middleware
+package jwthelper
 
 import (
 	"HRSystem/pkg/errors"
-	"HRSystem/pkg/jwthelper"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
-func ValidateJWT() func(ctx *gin.Context) {
+func (j *helper) ValidateJWT() func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token == "" {
@@ -17,8 +16,7 @@ func ValidateJWT() func(ctx *gin.Context) {
 			ctx.Abort()
 			return
 		}
-
-		_, err := jwthelper.ParseToken(token)
+		_, err := j.ParseToken(token)
 		if err != nil {
 			innerErr := errors.ErrInvalidToken
 			if ve, ok := err.(*jwt.ValidationError); ok {

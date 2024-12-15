@@ -11,6 +11,12 @@ import (
 type Config struct {
 	Http     server.Config   `mapstructure:"http"`
 	Database database.Config `mapstructure:"database"`
+	Redis    Redis           `mapstructure:"redis"`
+}
+
+type Redis struct {
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }
 
 func GetConfig(configFile string) *Config {

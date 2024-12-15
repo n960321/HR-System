@@ -5,13 +5,16 @@ import (
 	"HRSystem/internal/handler"
 	"HRSystem/internal/service"
 	"HRSystem/pkg/database"
+	"HRSystem/pkg/jwthelper"
 	"HRSystem/pkg/logger"
 	"HRSystem/pkg/server"
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/go-redis/redis"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -50,6 +53,13 @@ func RunServer(cmd *cobra.Command, args []string) {
 	logger.SetLogger(local)
 	config := config.GetConfig(configFile)
 
+	redis := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", config.Redis.Host, config.Redis.Port),
+		Password: "", // No password set
+		DB:       0,  // Use default DB
+	})
+
+	jwthelper.New(redis)
 	db := database.NewDatabase(config.Database)
 	accountSvc := service.NewAccountService(db)
 	clockInRecordSvc := service.NewClockInRecordService(db)
