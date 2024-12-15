@@ -104,17 +104,16 @@ func (h *Handler) CreateAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid request body"})
 		return
 	}
-	// Optzime: 應該放在service layer檢查
-	if claim.AccountType != model.AccountTypeAdmin {
-		ctx.JSON(http.StatusForbidden, gin.H{"message": errors.ErrInsufficientPrivilege.Error()})
-		return
-	}
 
-	pwd, err := h.accountSvc.CreateAccount(ctx.Request.Context(), requestBody.Name, requestBody.Account)
+	creator := h.accountSvc.ConvertClaimToAccount(claim)
+
+	pwd, err := h.accountSvc.CreateAccount(ctx.Request.Context(), creator, requestBody.Name, requestBody.Account)
 	if err != nil {
 		status := http.StatusInternalServerError
 		if err == errors.ErrAccountDuplicate {
 			status = http.StatusBadRequest
+		} else if err == errors.ErrInsufficientPrivilege {
+			status = http.StatusForbidden
 		}
 		ctx.JSON(status, gin.H{
 			"message": err.Error(),

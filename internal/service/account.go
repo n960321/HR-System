@@ -72,7 +72,11 @@ func (s *AccountService) ChangePassword(ctx context.Context, account, oldPasswor
 
 }
 
-func (s *AccountService) CreateAccount(ctx context.Context, name, account string) (string, error) {
+func (s *AccountService) CreateAccount(ctx context.Context, creator *model.Account, name, account string) (string, error) {
+	if creator.Type != model.AccountTypeAdmin {
+		return "", errors.ErrInsufficientPrivilege
+	}
+
 	var existingAccount model.Account
 	if err := s.db.GetGorm().Where("account = ?", account).First(&existingAccount).Error; err == nil {
 		return "", errors.ErrAccountDuplicate
@@ -100,4 +104,12 @@ func (s *AccountService) CreateAccount(ctx context.Context, name, account string
 	}
 
 	return pwd, nil
+}
+
+func (s *AccountService) ConvertClaimToAccount(c *jwthelper.Claim) *model.Account {
+	return &model.Account{
+		ID:      c.ID,
+		Account: c.Account,
+		Type:    c.AccountType,
+	}
 }
