@@ -3,6 +3,7 @@ package test
 import (
 	"HRSystem/internal/service"
 	"HRSystem/pkg/database"
+	"HRSystem/pkg/jwthelper"
 	"HRSystem/pkg/logger"
 	"context"
 	"fmt"
@@ -40,7 +41,7 @@ func TestMain(m *testing.M) {
 	clockInRecordSvc = service.NewClockInRecordService(db)
 
 	SeedAccount(db.GetGorm())
-
+	jwthelper.New(nil)
 	code := m.Run()
 	if stopContainer != nil {
 		stopContainer()
@@ -94,7 +95,7 @@ func runMysqlImage() func() {
 	time.Sleep(10 * time.Second)
 
 	log.Info().Str("container name", containerName).Msg("Starting Conatiner")
-
+	
 
 	return func() {
 		cli.ContainerStop(ctx, resp.ID, container.StopOptions{})
